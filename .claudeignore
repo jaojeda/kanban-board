@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.next/
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.min.js
+*.map
+.DS_Store
