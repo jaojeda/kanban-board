@@ -15,6 +15,14 @@ React + TypeScript app. Vite. No class components.
 - Types co-located with their component unless shared (then src/types/)
 - Prefer named exports
 
+# Card Movement
+
+Cards support two movement mechanisms:
+- **Drag-and-drop** — HTML5 native DnD (no library); `Column` acts as a drop target, `Card` is draggable
+- **Button-based** — ← → arrow buttons on each card to move left/right one column
+
+Both must stay in sync — moving a card via either method produces the same state update.
+
 # What Not to Touch
 
 - Don't modify vite.config.ts without asking
