@@ -1,6 +1,6 @@
-import { Column } from './components/Column';
-import { COLUMN_DEFS } from './types';
-import type { BoardState } from './types';
+import { Column } from "./components/Column";
+import { COLUMN_DEFS } from "./types";
+import type { BoardState } from "./types";
 
 const initialState: BoardState = {
   columns: COLUMN_DEFS,
