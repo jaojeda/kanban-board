@@ -27,6 +27,7 @@ Both must stay in sync — moving a card via either method produces the same sta
 
 - Don't modify vite.config.ts without asking
 - Don't add new dependencies without confirming
+- When installing or switching Node versions, add or update .nvmrc to match
 
 # Commands
 
