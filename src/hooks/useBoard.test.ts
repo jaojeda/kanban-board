@@ -159,4 +159,95 @@ describe('useBoard', () => {
       expect(todo.cardIds[0]).not.toBe(done.cardIds[0]);
     });
   });
+
+  describe('deleteCard', () => {
+    it('removes the card from the cards record', () => {
+      const { result } = renderHook(() => useBoard());
+
+      act(() => {
+        result.current.addCard('todo', { title: 'To delete', priority: 'low' });
+      });
+      const cardId = Object.keys(result.current.cards)[0];
+
+      act(() => {
+        result.current.deleteCard('todo', cardId);
+      });
+
+      expect(result.current.cards[cardId]).toBeUndefined();
+    });
+
+    it("removes the card id from the column's cardIds", () => {
+      const { result } = renderHook(() => useBoard());
+
+      act(() => {
+        result.current.addCard('todo', { title: 'To delete', priority: 'low' });
+      });
+      const cardId = Object.keys(result.current.cards)[0];
+
+      act(() => {
+        result.current.deleteCard('todo', cardId);
+      });
+
+      const column = result.current.columns.find((c) => c.id === 'todo')!;
+      expect(column.cardIds).not.toContain(cardId);
+    });
+
+    it('does not affect cards in other columns', () => {
+      const { result } = renderHook(() => useBoard());
+
+      act(() => {
+        result.current.addCard('todo', { title: 'To delete', priority: 'low' });
+        result.current.addCard('done', { title: 'To keep', priority: 'high' });
+      });
+      const todoCardId = result.current.columns.find((c) => c.id === 'todo')!.cardIds[0];
+      const doneCardId = result.current.columns.find((c) => c.id === 'done')!.cardIds[0];
+
+      act(() => {
+        result.current.deleteCard('todo', todoCardId);
+      });
+
+      expect(result.current.cards[doneCardId]).toBeDefined();
+      const doneColumn = result.current.columns.find((c) => c.id === 'done')!;
+      expect(doneColumn.cardIds).toContain(doneCardId);
+    });
+
+    it('leaves state unchanged when cardId does not exist in the specified column', () => {
+      const { result } = renderHook(() => useBoard());
+
+      act(() => {
+        result.current.addCard('todo', { title: 'Existing card', priority: 'low' });
+      });
+      const stateBefore = {
+        cards: result.current.cards,
+        columns: result.current.columns,
+      };
+
+      act(() => {
+        result.current.deleteCard('todo', 'nonexistent-id');
+      });
+
+      expect(result.current.cards).toBe(stateBefore.cards);
+      expect(result.current.columns).toBe(stateBefore.columns);
+    });
+
+    it('preserves the order of remaining cards in the column', () => {
+      const { result } = renderHook(() => useBoard());
+
+      act(() => {
+        result.current.addCard('todo', { title: 'First', priority: 'low' });
+        result.current.addCard('todo', { title: 'Second', priority: 'medium' });
+        result.current.addCard('todo', { title: 'Third', priority: 'high' });
+      });
+      const column = result.current.columns.find((c) => c.id === 'todo')!;
+      const middleCardId = column.cardIds[1];
+
+      act(() => {
+        result.current.deleteCard('todo', middleCardId);
+      });
+
+      const updatedColumn = result.current.columns.find((c) => c.id === 'todo')!;
+      const remainingTitles = updatedColumn.cardIds.map((id) => result.current.cards[id].title);
+      expect(remainingTitles).toEqual(['First', 'Third']);
+    });
+  });
 });

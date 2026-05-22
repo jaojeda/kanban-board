@@ -2,6 +2,15 @@
 
 React + TypeScript app. Vite. No class components.
 
+# Workflow
+
+- Work in slices — one feature at a time, end to end
+- Follow TDD: write tests before implementation
+- Always wait for explicit approval before implementing after writing tests
+- Each change must touch only the file(s) explicitly specified — no drive-by edits
+- Read docs/PRD.md and CLAUDE.md before starting any new slice
+- Surface ambiguity and get a decision before touching integration points (e.g. App.tsx, wiring components together)
+
 # Stack
 
 - React 18, TypeScript 5, Vite

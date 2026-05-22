@@ -36,5 +36,22 @@ export function useBoard() {
     }));
   }
 
-  return { columns: state.columns, cards: state.cards, addCard };
+  function deleteCard(columnId: ColumnId, cardId: string) {
+    setState((prev) => {
+      const column = prev.columns.find((c) => c.id === columnId);
+      if (!column?.cardIds.includes(cardId)) return prev;
+
+      const { [cardId]: _, ...remainingCards } = prev.cards;
+      return {
+        cards: remainingCards,
+        columns: prev.columns.map((col) =>
+          col.id === columnId
+            ? { ...col, cardIds: col.cardIds.filter((id) => id !== cardId) }
+            : col
+        ),
+      };
+    });
+  }
+
+  return { columns: state.columns, cards: state.cards, addCard, deleteCard };
 }
